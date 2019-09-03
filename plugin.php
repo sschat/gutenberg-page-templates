@@ -73,8 +73,6 @@ add_action('init', function () {
 
 
 add_action('enqueue_block_editor_assets', function () {
-
-
     $screen = get_current_screen();
 //    if ($screen->post_type !== 'page') return; // enabled for Pages
 
@@ -84,5 +82,19 @@ add_action('enqueue_block_editor_assets', function () {
         array('wp-i18n', 'wp-blocks', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post'),
         filemtime(dirname(__FILE__) . '/sidebar.js')
     );
-
 });
+
+/**
+ * this function can lock the page down
+ * BUT... it will complain about the template not matching the template we have to define here
+ */
+function myplugin_register_template() {
+    $post_type_object = get_post_type_object( 'page' );
+    $post_type_object->template = array(
+        array( 'core/paragraph', array(
+            'placeholder' => 'Add Description...',
+        ) ),
+    );
+    $post_type_object->template_lock = 'all';
+}
+add_action( 'init', 'myplugin_register_template' );
